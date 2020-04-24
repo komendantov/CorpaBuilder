@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.interfaces;
+package ru.komendantov.corpabuilder.auth.interfaces;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

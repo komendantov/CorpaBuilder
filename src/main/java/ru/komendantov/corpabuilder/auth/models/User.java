@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.models;
+package ru.komendantov.corpabuilder.auth.models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

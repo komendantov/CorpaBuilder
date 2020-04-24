@@ -21,6 +21,7 @@ import java.util.List;
 @Controller
 @RequestMapping
 public class HeyController {
+    
     @Autowired
     private TextRepository textRepository;
 

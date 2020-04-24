@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.exceptions;
+package ru.komendantov.corpabuilder.auth.exceptions;
 
 public class EmailExistsException extends Exception {
 }

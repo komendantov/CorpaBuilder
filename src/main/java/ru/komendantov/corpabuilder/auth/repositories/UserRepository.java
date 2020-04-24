@@ -1,9 +1,9 @@
-package ru.komendantov.corpabuilder.repositories;
+package ru.komendantov.corpabuilder.auth.repositories;
 
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import ru.komendantov.corpabuilder.models.User;
+import ru.komendantov.corpabuilder.auth.models.User;
 
 import java.util.Optional;
 

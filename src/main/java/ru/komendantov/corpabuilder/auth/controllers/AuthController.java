@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.controllers;
+package ru.komendantov.corpabuilder.auth.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +8,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import ru.komendantov.corpabuilder.enums.ERole;
-import ru.komendantov.corpabuilder.jwt.JwtUtils;
-import ru.komendantov.corpabuilder.models.*;
-import ru.komendantov.corpabuilder.repositories.UserRepository;
-import ru.komendantov.corpabuilder.services.UserDetailsImpl;
+import ru.komendantov.corpabuilder.auth.enums.ERole;
+import ru.komendantov.corpabuilder.auth.jwt.JwtUtils;
+import ru.komendantov.corpabuilder.auth.models.*;
+import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
+import ru.komendantov.corpabuilder.auth.services.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.util.ArrayList;

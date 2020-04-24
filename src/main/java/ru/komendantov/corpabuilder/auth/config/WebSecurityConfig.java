@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.configuration;
+package ru.komendantov.corpabuilder.auth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.komendantov.corpabuilder.jwt.AuthEntryPointJwt;
-import ru.komendantov.corpabuilder.jwt.AuthTokenFilter;
-import ru.komendantov.corpabuilder.services.UserDetailsServiceImpl;
+import ru.komendantov.corpabuilder.auth.jwt.AuthEntryPointJwt;
+import ru.komendantov.corpabuilder.auth.jwt.AuthTokenFilter;
+import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -57,6 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/auth/**").permitAll()
+                //  .antMatchers("/test/**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/api/test/**").permitAll()
                 .anyRequest().authenticated();
 

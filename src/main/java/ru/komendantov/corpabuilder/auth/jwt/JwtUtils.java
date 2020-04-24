@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.jwt;
+package ru.komendantov.corpabuilder.auth.jwt;
 
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import ru.komendantov.corpabuilder.services.UserDetailsImpl;
+import ru.komendantov.corpabuilder.auth.services.UserDetailsImpl;
 
 import java.util.Date;
 

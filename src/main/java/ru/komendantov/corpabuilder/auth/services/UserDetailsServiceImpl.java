@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.services;
+package ru.komendantov.corpabuilder.auth.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.komendantov.corpabuilder.models.User;
-import ru.komendantov.corpabuilder.repositories.UserRepository;
+import ru.komendantov.corpabuilder.auth.models.User;
+import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

@@ -1,4 +1,4 @@
-package ru.komendantov.corpabuilder.jwt;
+package ru.komendantov.corpabuilder.auth.jwt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

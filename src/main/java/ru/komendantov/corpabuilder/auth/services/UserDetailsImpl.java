@@ -1,10 +1,10 @@
-package ru.komendantov.corpabuilder.services;
+package ru.komendantov.corpabuilder.auth.services;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.komendantov.corpabuilder.models.User;
+import ru.komendantov.corpabuilder.auth.models.User;
 
 import java.util.Collection;
 import java.util.List;
