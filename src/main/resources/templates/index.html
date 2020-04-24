@@ -5,12 +5,12 @@
     <title>Title</title>
 </head>
 <body>
-<form name="f1" method="post" action="/hey">
+<form action="/hey" method="post" name="f1">
     <!--    <input name="link" type="hidden" value="index.php" />-->
     Название: <br/>
-    <input name="title" type="text" size="25" maxlength="30" value="Название"/> <br/>
-    <textarea name="text" id="text" cols="48" rows="8"> </textarea>
-    <input type="submit" name="enter" value="Отправить"/>
+    <input maxlength="30" name="title" size="25" type="text" value="Название"/> <br/>
+    <textarea cols="48" id="text" name="text" rows="8"> </textarea>
+    <input name="enter" type="submit" value="Отправить"/>
 </form>
 </body>
 </html>

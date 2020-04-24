@@ -1,6 +1,7 @@
 package ru.komendantov.corpabuilder.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 

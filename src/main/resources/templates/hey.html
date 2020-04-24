@@ -8,17 +8,15 @@
 <!--<p th:text="'Hello, ' + ${hey} + '!'" />-->
 
 
-
 <table border="1">
     <tr th:each="element : ${list}">
-        <td th:text="${element.text}" >keyvalue</td>
+        <td th:text="${element.text}">keyvalue</td>
 
         <td th:each="analysis : ${element.analysis}" th:text="${analysis.lex}"></td>
 
-        </table>
-    </tr>
 </table>
-
+</tr>
+</table>
 
 
 </body>

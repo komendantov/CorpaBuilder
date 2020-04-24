@@ -1,17 +1,11 @@
-
 package ru.komendantov.corpabuilder.models;
+
+import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -20,13 +14,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class Word implements Serializable {
 
+    private final static long serialVersionUID = 4792518248327123081L;
     @JsonProperty("analysis")
     private List<Analysis> analysis = null;
     @JsonProperty("text")
     private String text;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-    private final static long serialVersionUID = 4792518248327123081L;
 
     /**
      * No args constructor for use in serialization

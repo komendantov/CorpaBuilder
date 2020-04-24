@@ -4,3 +4,8 @@ spring:
       host: 127.0.0.1
       port: 27017
       database: corpabuilder
+
+# App Properties
+security:
+  jwtSecret: y*f3&B?HXygcPesnr^5-G
+  jwtExpirationMs: 86400000
