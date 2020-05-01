@@ -9,3 +9,10 @@ spring:
 security:
   jwtSecret: y*f3&B?HXygcPesnr^5-G
   jwtExpirationMs: 86400000
+
+components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes

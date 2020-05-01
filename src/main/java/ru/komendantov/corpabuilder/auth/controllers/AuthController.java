@@ -12,7 +12,7 @@ import ru.komendantov.corpabuilder.auth.enums.ERole;
 import ru.komendantov.corpabuilder.auth.jwt.JwtUtils;
 import ru.komendantov.corpabuilder.auth.models.*;
 import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
-import ru.komendantov.corpabuilder.auth.services.UserDetailsImpl;
+import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -35,7 +35,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -56,7 +56,7 @@ public class AuthController {
                 roles));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity

@@ -2,14 +2,12 @@ package ru.komendantov.corpabuilder.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.models.Text;
 import ru.komendantov.corpabuilder.models.Word;
 import ru.komendantov.corpabuilder.repositories.TextRepository;
@@ -18,7 +16,7 @@ import ru.komendantov.corpabuilder.services.MystemService;
 import java.io.IOException;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping
 public class HeyController {
     
@@ -36,6 +34,7 @@ public class HeyController {
         return "index";
     }
 
+   // @ApiOperation(value = "Find all companies", notes = "Returns all available companies in the system")
     @PostMapping("/hey")
     public String getHey(@RequestParam(name = "title") String title, @RequestParam(name = "text") String text, Model model) throws IOException, InterruptedException {
         //   model.addAttribute("text",text);

@@ -3,6 +3,7 @@ package ru.komendantov.corpabuilder.auth.models;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.repository.Repository;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -11,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+
 @Document(collection = "users")
-public class User {
+public class User  {
     @Id
     private String id;
 

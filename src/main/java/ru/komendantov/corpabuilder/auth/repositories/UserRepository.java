@@ -12,9 +12,12 @@ import java.util.Optional;
 public interface UserRepository extends MongoRepository<User, String> {
     Optional<User> findByUsername(String username);
 
+    Optional<User> getById(String id);
+
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
 
+    Optional<User> getByUsername(String username);
     //Optional<Role> findByRole(ERole role);
 }
