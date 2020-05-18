@@ -28,7 +28,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-
         return UserDetailsImpl.build(user);
     }
 
@@ -40,9 +39,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             update.set("username", user.getUsername());
         if (user.getEmail() != null && !user.getEmail().isEmpty())
             update.set("email", user.getEmail());
-        if (user.getPassword()!=null && !user.getPassword().isEmpty())
+        if (user.getPassword() != null && !user.getPassword().isEmpty())
             update.set("password", user.getPassword());
-        if (user.getUserSettings().getReplaces()!=null && !user.getUserSettings().getReplaces().isEmpty()) {
+        if (user.getUserSettings().getReplaces() != null && !user.getUserSettings().getReplaces().isEmpty()) {
             update.set("userSettings.replaces", user.getUserSettings().getReplaces());
         }
         return mongoTemplate.upsert(query, update, User.class);

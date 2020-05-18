@@ -1,21 +1,24 @@
 package ru.komendantov.corpabuilder.controllers;
 
-import com.mongodb.client.result.UpdateResult;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.auth.models.User;
 import ru.komendantov.corpabuilder.auth.models.UserSettings;
 import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
 import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
+
+import java.util.HashMap;
 
 
 @RestController
@@ -37,54 +40,72 @@ public class UsersController {
     }
 
 
+//    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+//    @PostMapping("/me")
+//    public UpdateResult updateUser(User user) throws Exception {
+//        //need to check
+//        return userDetailsService.updateUser(userRepository.getByUsername(getUserDetails().getUsername()).get().getUsername(), user);
+//    }
+
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-    @PostMapping("/me")
-    public UpdateResult updateUser(User user) throws Exception {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            //need to check
-
-            return userDetailsService.updateUser(userRepository.getByUsername(userDetails.getUsername()).get().getUsername(), user);
-        } else throw new Exception();
+    @PostMapping("/me/username")
+    public User updateUserUsername(String username) {
+        //need to check
+        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+        user.setUsername(username);
+        return userRepository.save(user);
     }
-
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/me")
-    public User getUser() throws Exception {
-        //need checking if user exists
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            //need to check
-            return userRepository.getByUsername(userDetails.getUsername()).get();
-        } else throw new Exception();
+    public User getUser() {
+        //need to check
+        return userRepository.getByUsername(getUserDetails().getUsername()).get();
     }
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/me/settings")
-    public UserSettings getUserSettings() throws Exception {
-        //need checking if user exists
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            //need to check
-            return userRepository.getByUsername(userDetails.getUsername()).get().getUserSettings();
-        } else throw new Exception();
+    public UserSettings getUserSettings() {
+        //need to check
+        return userRepository.getByUsername(getUserDetails().getUsername()).get().getUserSettings();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+    @PostMapping("/me/settings")
+    public void setUserSettings(UserSettings userSettings) {
+        //need to check
+        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+        user.setUserSettings(userSettings);
+        userRepository.save(user);
+        //return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
     }
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-    @PostMapping("/me/settings")
-    public UserSettings setUserSettings() throws Exception {
+    @GetMapping("/me/settings/replaces")
+    public HashMap<String, String> getUserReplaces() {
+        //need to check
+        return userRepository.getByUsername(getUserDetails().getUsername()).get().getUserSettings().getReplaces();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+    @PostMapping("/me/settings/replaces")
+    public void setUserReplaces(@RequestParam JSONObject replaces) throws JsonProcessingException {
+        //need to check
+        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+
+        user.getUserSettings().setReplaces(new ObjectMapper().readValue(replaces.toString() ,HashMap.class));
+        userRepository.save(user);
+    }
+
+
+    private UserDetailsImpl getUserDetails() {
         //need checking if user exists
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            //need to check
-            return userRepository.getByUsername(userDetails.getUsername()).get().getUserSettings();
-        } else throw new Exception();
+            return (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } else throw new RuntimeException();
     }
 
 }
