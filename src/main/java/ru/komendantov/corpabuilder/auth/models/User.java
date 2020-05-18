@@ -1,10 +1,11 @@
 package ru.komendantov.corpabuilder.auth.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.repository.Repository;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,9 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
+@AllArgsConstructor
+@NoArgsConstructor
 @Document(collection = "users")
-public class User  {
+public class User {
     @Id
     private String id;
 
@@ -37,19 +39,10 @@ public class User  {
 
     private UserSettings userSettings = new UserSettings();
 
-    public User() {
-    }
-
     public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public User(String username, String email, String password, List<String> roles) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.roles = roles;
-    }
 }

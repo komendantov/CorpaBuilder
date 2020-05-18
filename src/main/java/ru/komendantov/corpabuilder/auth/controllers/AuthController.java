@@ -12,7 +12,6 @@ import ru.komendantov.corpabuilder.auth.enums.ERole;
 import ru.komendantov.corpabuilder.auth.jwt.JwtUtils;
 import ru.komendantov.corpabuilder.auth.models.*;
 import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
-import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 
 import javax.validation.Valid;
 import java.util.ArrayList;

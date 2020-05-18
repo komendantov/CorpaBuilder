@@ -7,15 +7,14 @@ import io.swagger.annotations.Authorization;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.auth.models.User;
+import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 import ru.komendantov.corpabuilder.auth.models.UserSettings;
 import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
-import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public class UsersController {
 //    }
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-    @PostMapping("/me/username")
+    @PutMapping("/me/username")
     public User updateUserUsername(String username) {
         //need to check
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
@@ -70,16 +69,16 @@ public class UsersController {
         return userRepository.getByUsername(getUserDetails().getUsername()).get().getUserSettings();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-    @PostMapping("/me/settings")
-    public void setUserSettings(UserSettings userSettings) {
-        //need to check
-        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
-        user.setUserSettings(userSettings);
-        userRepository.save(user);
-        //return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-    }
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+//    @PostMapping("/me/settings")
+//    public void setUserSettings(UserSettings userSettings) {
+//        //need to check
+//        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+//        user.setUserSettings(userSettings);
+//        userRepository.save(user);
+//        //return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+//    }
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/me/settings/replaces")
@@ -90,12 +89,11 @@ public class UsersController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-    @PostMapping("/me/settings/replaces")
+    @PutMapping("/me/settings/replaces")
     public void setUserReplaces(@RequestParam JSONObject replaces) throws JsonProcessingException {
         //need to check
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
-
-        user.getUserSettings().setReplaces(new ObjectMapper().readValue(replaces.toString() ,HashMap.class));
+        user.getUserSettings().setReplaces(new ObjectMapper().readValue(replaces.toString(), HashMap.class));
         userRepository.save(user);
     }
 
