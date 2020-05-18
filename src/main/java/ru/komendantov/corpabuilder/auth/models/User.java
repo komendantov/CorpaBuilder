@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Document(collection = "users")
 public class User {
+
     @Id
     private String id;
 
@@ -38,6 +39,7 @@ public class User {
     private List<String> roles = new ArrayList<>();
 
     private UserSettings userSettings = new UserSettings();
+
 
     public User(String username, String email, String password) {
         this.username = username;

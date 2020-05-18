@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.auth.models.User;
 import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
@@ -30,6 +31,8 @@ public class UsersController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private PasswordEncoder encoder;
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @GetMapping("/{id}")
@@ -94,6 +97,15 @@ public class UsersController {
         //need to check
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
         user.getUserSettings().setReplaces(new ObjectMapper().readValue(replaces.toString(), HashMap.class));
+        userRepository.save(user);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+    @PutMapping("/me/password")
+    public void updateUserPassword(String password) {
+        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+        user.setPassword(encoder.encode(password));
         userRepository.save(user);
     }
 
