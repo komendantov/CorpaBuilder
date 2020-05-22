@@ -35,8 +35,6 @@ public class MystemService {
 
     public String analyseText(String text) throws IOException, InterruptedException {
         File f = File.createTempFile("mystemRes", "temp");
-        //   f.createNewFile();
-        //   FileWriter fw = new FileWriter(f);
         BufferedWriter bw = new BufferedWriter(new FileWriter(f));
         bw.write(text);
         bw.close();

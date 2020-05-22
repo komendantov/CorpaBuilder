@@ -6,6 +6,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.komendantov.corpabuilder.auth.models.User;
 import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
+
+import java.util.HashMap;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -47,4 +52,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return mongoTemplate.upsert(query, update, User.class);
     }
 
+    public HashMap<String, String> getUserReplaces() {
+        //check
+        return userRepository.getByUsername(getUserDetails().getUsername()).get().getUserSettings().getReplaces();
+    }
+
+    private UserDetailsImpl getUserDetails() {
+        //need checking if user exists
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            return (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } else throw new RuntimeException();
+    }
 }
