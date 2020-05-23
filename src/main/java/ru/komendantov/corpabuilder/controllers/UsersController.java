@@ -19,7 +19,7 @@ import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 
 import java.util.HashMap;
 
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/v1/users")
 public class UsersController {
