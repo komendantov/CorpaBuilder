@@ -13,7 +13,7 @@ public class MystemService {
         ProcessBuilder builder = new ProcessBuilder();
         String command;
         if (isWindows) {
-            command = "";
+            command = "./mystem.exe -cisd --eng-gr --generate-all --format json " + targetFile.getCanonicalPath();
         } else {
             command = "./mystem -cisd --eng-gr --generate-all --format json " + targetFile.getCanonicalPath();
         }
