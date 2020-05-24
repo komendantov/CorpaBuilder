@@ -4,11 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.models.Word;
 import ru.komendantov.corpabuilder.services.MystemService;
 
@@ -24,9 +22,10 @@ public class CorpusController {
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/analyse")
-    public List<Word> analyseText(@RequestParam(name = "text") String text) throws IOException, InterruptedException {
+    public List<Word> analyseText(@RequestBody String text) throws IOException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String analysedText = mystemService.analyseText(text);
+        JSONObject textJson = new JSONObject(text);
+        String analysedText = mystemService.analyseText(textJson.getString("text"));
         return objectMapper.readValue(analysedText, new TypeReference<List<Word>>() {
         });
     }
