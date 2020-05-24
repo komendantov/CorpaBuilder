@@ -1,12 +1,11 @@
 package ru.komendantov.corpabuilder.models.requests;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NonNull;
+
+import javax.validation.constraints.NotBlank;
 
 @Data
-@AllArgsConstructor
 public class AnalysePostRequest {
-    @NonNull
+    @NotBlank
     private String text;
 }
