@@ -17,6 +17,8 @@ import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 import ru.komendantov.corpabuilder.auth.models.UserSettings;
 import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
+import ru.komendantov.corpabuilder.models.requests.UserPasswordPutRequest;
+import ru.komendantov.corpabuilder.models.requests.UserUpdateUsernamePutRequest;
 
 import java.util.HashMap;
 
@@ -43,19 +45,12 @@ public class UsersController {
     }
 
 
-//    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-//    @PostMapping("/me")
-//    public UpdateResult updateUser(User user) throws Exception {
-//        //need to check
-//        return userDetailsService.updateUser(userRepository.getByUsername(getUserDetails().getUsername()).get().getUsername(), user);
-//    }
-
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/username")
-    public User updateUserUsername(String username) {
+    public User updateUserUsername(@RequestBody UserUpdateUsernamePutRequest userUpdateUsernamePutRequest) {
         //need to check
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
-        user.setUsername(username);
+        user.setUsername(userUpdateUsernamePutRequest.getUsername());
         return userRepository.save(user);
     }
 
@@ -94,7 +89,7 @@ public class UsersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/settings/replaces")
-    public void setUserReplaces(@RequestParam JSONObject replaces) throws JsonProcessingException {
+    public void setUserReplaces(@RequestBody JSONObject replaces) throws JsonProcessingException {
         //need to check
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
         user.getUserSettings().setReplaces(new ObjectMapper().readValue(replaces.toString(), HashMap.class));
@@ -104,9 +99,9 @@ public class UsersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/password")
-    public void updateUserPassword(String password) {
+    public void updateUserPassword(@RequestBody UserPasswordPutRequest userPasswordPutRequest) {
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
-        user.setPassword(encoder.encode(password));
+        user.setPassword(encoder.encode(userPasswordPutRequest.getPassword()));
         userRepository.save(user);
     }
 
