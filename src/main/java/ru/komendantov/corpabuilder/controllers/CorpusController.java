@@ -6,10 +6,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 import ru.komendantov.corpabuilder.models.Word;
+import ru.komendantov.corpabuilder.models.requests.AnalysePostRequest;
 import ru.komendantov.corpabuilder.services.CorpusUtils;
 import ru.komendantov.corpabuilder.services.MystemService;
 
@@ -29,10 +31,11 @@ public class CorpusController {
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PostMapping("/analyse")
-    public List<Word> analyseText(@RequestParam(name = "text") String text, @RequestParam(name = "doReplaces", defaultValue = "false")
+    public List<Word> analyseText(@RequestBody AnalysePostRequest analysePostRequest, @RequestParam(name = "doReplaces", defaultValue = "false")
             boolean doReplaces) throws IOException, InterruptedException {
         String analysedText;
-        HashMap<Integer, String> textWithReplacesMap = new HashMap<>();
+        String text = analysePostRequest.getText();
+        HashMap<Integer, String> textWithReplacesMap;
         List<String> textList = new ArrayList<>();
         if (doReplaces) {
             String[] textArray = text.split("\\b");
@@ -49,6 +52,4 @@ public class CorpusController {
         return objectMapper.readValue(analysedText, new TypeReference<List<Word>>() {
         });
     }
-
-
 }
