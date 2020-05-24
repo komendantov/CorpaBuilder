@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 import ru.komendantov.corpabuilder.models.Word;
 import ru.komendantov.corpabuilder.models.requests.AnalysePostRequest;
@@ -19,6 +16,7 @@ import java.io.IOException;
 import java.util.*;
 
 @RestController("/api/v1/corpus")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CorpusController {
     @Autowired
     private MystemService mystemService;
