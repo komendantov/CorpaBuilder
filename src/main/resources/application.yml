@@ -10,6 +10,10 @@ security:
   jwtSecret: y*f3&B?HXygcPesnr^5-G
   jwtExpirationMs: 86400000
 
+server:
+  error:
+    include-stacktrace: never
+
 components:
   securitySchemes:
     bearerAuth:            # arbitrary name for the security scheme
