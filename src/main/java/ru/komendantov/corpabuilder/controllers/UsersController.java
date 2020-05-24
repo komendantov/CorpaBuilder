@@ -8,10 +8,14 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.komendantov.corpabuilder.auth.models.User;
 import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 import ru.komendantov.corpabuilder.auth.models.UserSettings;
@@ -30,6 +34,8 @@ public class UsersController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -101,7 +107,16 @@ public class UsersController {
     @PutMapping("/me/password")
     public void updateUserPassword(@RequestBody UserPasswordPutRequest userPasswordPutRequest) {
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
-        user.setPassword(encoder.encode(userPasswordPutRequest.getPassword()));
+        if (!userPasswordPutRequest.getNewPassword().equals(userPasswordPutRequest.getNewPasswordConfirm()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password mismatch");
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), userPasswordPutRequest.getCurrentPassword()));
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Check the current password");
+        }
+        user.setPassword(encoder.encode(userPasswordPutRequest.getNewPassword()));
+
         userRepository.save(user);
     }
 

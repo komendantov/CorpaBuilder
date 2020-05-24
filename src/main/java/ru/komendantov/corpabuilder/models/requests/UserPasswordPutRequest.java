@@ -9,5 +9,11 @@ import javax.validation.constraints.Size;
 public class UserPasswordPutRequest {
     @NotBlank
     @Size(max = 120)
-    private String password;
+    private String currentPassword;
+    @NotBlank
+    @Size(max = 120)
+    private String newPassword;
+    @NotBlank
+    @Size(max = 120)
+    private String newPasswordConfirm;
 }
