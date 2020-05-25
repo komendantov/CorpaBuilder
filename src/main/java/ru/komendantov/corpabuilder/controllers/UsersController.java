@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RequestMapping("/api/v1/users")
 public class UsersController {
 
@@ -95,16 +95,15 @@ public class UsersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/settings/replaces")
-    public void setUserReplaces(@RequestBody JSONObject replaces) throws JsonProcessingException {
+    public void setUserReplaces(@RequestBody HashMap<String,String> replaces) throws JsonProcessingException {
         //need to check
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
-        user.getUserSettings().setReplaces(new ObjectMapper().readValue(replaces.toString(), HashMap.class));
+        user.getUserSettings().setReplaces(replaces);
         userRepository.save(user);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-    @CrossOrigin(origins = "*", maxAge = 3600)
     @PutMapping("/me/password")
     public void updateUserPassword(@RequestBody UserPasswordPutRequest userPasswordPutRequest) {
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
