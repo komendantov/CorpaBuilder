@@ -104,6 +104,7 @@ public class UsersController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @PutMapping("/me/password")
     public void updateUserPassword(@RequestBody UserPasswordPutRequest userPasswordPutRequest) {
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
