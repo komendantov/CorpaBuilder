@@ -1,10 +1,7 @@
 package ru.komendantov.corpabuilder.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -23,6 +20,7 @@ import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 import ru.komendantov.corpabuilder.models.requests.UserPasswordPutRequest;
 import ru.komendantov.corpabuilder.models.requests.UserUpdateUsernamePutRequest;
+import ru.komendantov.corpabuilder.swagger.interfaces.UsersController;
 
 import java.util.HashMap;
 
@@ -30,7 +28,7 @@ import java.util.HashMap;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 @RequestMapping("/api/v1/users")
-public class UsersController {
+public class UsersControllerImpl implements UsersController {
 
     @Autowired
     UserRepository userRepository;
@@ -43,7 +41,7 @@ public class UsersController {
     @Autowired
     private PasswordEncoder encoder;
 
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+
     @GetMapping("/{id}")
     public User getUser(String id) {
         //need checking if user exists
@@ -51,7 +49,6 @@ public class UsersController {
     }
 
 
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/username")
     public User updateUserUsername(@RequestBody UserUpdateUsernamePutRequest userUpdateUsernamePutRequest) {
         //need to check
@@ -60,14 +57,14 @@ public class UsersController {
         return userRepository.save(user);
     }
 
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+
     @GetMapping("/me")
     public User getUser() {
         //need to check
         return userRepository.getByUsername(getUserDetails().getUsername()).get();
     }
 
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+
     @GetMapping("/me/settings")
     public UserSettings getUserSettings() {
         //need to check
@@ -85,7 +82,7 @@ public class UsersController {
 //        //return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
 //    }
 
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+
     @GetMapping("/me/settings/replaces")
     public HashMap<String, String> getUserReplaces() {
         //need to check
@@ -95,7 +92,7 @@ public class UsersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/settings/replaces")
-    public void setUserReplaces(@RequestBody HashMap<String,String> replaces) throws JsonProcessingException {
+    public void setUserReplaces(@RequestBody HashMap<String, String> replaces) {
         //need to check
         User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
         user.getUserSettings().setReplaces(replaces);
@@ -128,5 +125,4 @@ public class UsersController {
             return (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         } else throw new RuntimeException();
     }
-
 }

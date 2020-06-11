@@ -22,7 +22,7 @@ public class MystemService {
         return process;
     }
 
-    public String analyseText(File targetFile) throws IOException, InterruptedException {
+    public String analyseText(File targetFile) throws IOException {
         Process mystemProcess = getMystemProcess(targetFile);
         BufferedReader input = new BufferedReader(new InputStreamReader(mystemProcess.getInputStream()));
         String line;
@@ -33,11 +33,13 @@ public class MystemService {
         return result.toString();
     }
 
-    public String analyseText(String text) throws IOException, InterruptedException {
+    public String analyseText(String text) throws IOException {
         File f = File.createTempFile("mystemRes", "temp");
         BufferedWriter bw = new BufferedWriter(new FileWriter(f));
         bw.write(text);
         bw.close();
-        return analyseText(f);
+        String result = analyseText(f);
+        f.delete();
+        return result;
     }
 }
