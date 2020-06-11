@@ -35,4 +35,10 @@ public interface CorpusController {
             @ApiResponse(code = 200, message = "Ok")
     })
     SearchResult search(@RequestBody SearchRequest searchRequest, Pageable page);
+
+    @ApiOperation(value = "Получить корпус по ID", authorizations = {@Authorization(value = "Bearer")})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok")
+    })
+    Corpus getCorpus(@ApiParam String id);
 }

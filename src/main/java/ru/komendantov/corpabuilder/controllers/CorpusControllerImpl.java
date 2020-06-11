@@ -84,5 +84,11 @@ public class CorpusControllerImpl implements CorpusController {
         return new SearchResult();
     }
 
+    @Override
+    @GetMapping("/{id}")
+    public Corpus getCorpus(String id) {
+        return null;
+    }
+
 //    public ResponseEntity<String>
 }
