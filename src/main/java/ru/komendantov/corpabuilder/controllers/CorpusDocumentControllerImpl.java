@@ -2,7 +2,10 @@ package ru.komendantov.corpabuilder.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,7 @@ import ru.komendantov.corpabuilder.swagger.interfaces.CorpusDocumentController;
 import ru.komendantov.corpabuilder.utils.UserUtils;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @RestController
@@ -80,8 +84,12 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     public List<SearchResult> search(@RequestBody SearchRequest searchRequest) {
 
 
-        //documentRepository.getAllByTitle()
 
+
+        Query query = new Query();
+        query.addCriteria(Criteria.where("title").regex("title",searchRequest.getTitle()));
+        query.addCriteria(Criteria.where("title").regex("title",searchRequest.getTitle()));
+        query.addCriteria(Criteria.where("words.text").is(searchRequest.getText()));
 
         List<CorpusDocument> s = documentRepository.getAllByAuthorUsername(searchRequest.getUsername());
 
@@ -89,7 +97,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
 
 //        List<CorpusDocument> s1 = documentRepository.getAllByAuthorUsernameAndAndWords(searchRequest.getUsername(), searchRequest.getGr());
-      //  s1.toString();
+        //  s1.toString();
         //        Page<TextRepository> pag = textRepository.findAll();
         SearchResult hh = new SearchResult();
         //hh.setCorpusDocumentID("tyhft5564345");
@@ -111,20 +119,35 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
     @Override
     @GetMapping("/user/me")
-    public ArrayList<SearchResult> getUserDocuments() {
-        return null;
+    public List<CorpusDocument> getUserDocuments() {
+        return documentRepository.getAllByAuthorUsername(userUtils.getUser().getUsername());
     }
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<?> changeCorpus(String documentId) {
-        return null;
+    public ResponseEntity<?> changeCorpus(@PathVariable String id, @RequestBody CorpusDocument document) {
+        Optional<CorpusDocument> corpusDocument = documentRepository.getFirstBy_id(id);
+        if (corpusDocument.isPresent()) {
+            CorpusDocument documentFromDb = corpusDocument.get();
+            documentFromDb.setDateOfChange(LocalDateTime.now());
+            documentFromDb.setTags(document.getTags());
+            documentFromDb.setTitle(document.getTitle());
+            documentFromDb.setWords(document.getWords());
+            documentRepository.save(documentFromDb);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCorpus(String documentId) {
-        return null;
+    public ResponseEntity<?> deleteCorpus(@PathVariable String id) {
+        try {
+            documentRepository.deleteById(id);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 //    public ResponseEntity<String>

@@ -46,13 +46,13 @@ public interface CorpusDocumentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok")
     })
-    ArrayList<SearchResult> getUserDocuments();
+    List<CorpusDocument> getUserDocuments();
 
     @ApiOperation(value = "Изменить документ", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok")
     })
-    ResponseEntity<?> changeCorpus(@ApiParam("id корпуса") String documentId);
+    ResponseEntity<?> changeCorpus(@ApiParam("id корпуса") String documentId, @ApiParam("документ") CorpusDocument document);
 
     @ApiOperation(value = "Удалить документ", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {

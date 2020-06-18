@@ -10,25 +10,18 @@ import java.util.Optional;
 
 public interface CorpusDocumentRepository extends MongoRepository<CorpusDocument, String> {
 
-     List<CorpusDocument> getAllByTitle(String title);
+    List<CorpusDocument> getAllByTitle(String title);
 
-     List<CorpusDocument> getAllByWordsAnalysisLex(String s);
-//     CorpusDocument getAllById(String id);
+    List<CorpusDocument> getAllByWordsAnalysisLex(String s);
 
-     List<CorpusDocument> getAllByAuthorUsername(String username);
+    List<CorpusDocument> getAllByAuthorUsername(String username);
 
-//     @Query("{_id: { $in: ?0 } })")
-//     List<CorpusDocument> findByIds(List<String> id);
-//
-////     List<CorpusDocument> getAllByAuthorUsernameAndAndWordsA_AnalysisA_Gr(String username,String s);
-//@Query("{ 'items': { $elemMatch: { 'refund.id' :  ?0 } } }")
-//List<CorpusDocument> findRMAByItemRefund(String refundId);
+    Optional<CorpusDocument> getFirstByAuthorUsername(String authorUsername);
 
-CorpusDocument getFirstByAuthorUsername(String authorUsername);
+    Optional<CorpusDocument> getFirstBy_id(String _id);
 
-Optional<CorpusDocument> getFirstBy_id(String _id);
-    ///   public List<Word> getAllByWords
-    // public Word findByText(String firstName);
-    //  public List<Word> findByLastName(String lastName);
-//    public List<Text> findByText(String text);
+
+
+//    Optional<CorpusDocument>
+
 }

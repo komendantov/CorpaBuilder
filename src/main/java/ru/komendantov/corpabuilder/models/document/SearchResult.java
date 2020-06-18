@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class SearchResult {
     private String documentID;
+    private String authorUsername;
     private String documentTitle;
-    private String documentAuthorUsername;
     private ArrayList<DocumentWord> documentExcerpt;
 }
