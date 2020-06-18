@@ -17,14 +17,18 @@ import ru.komendantov.corpabuilder.repositories.CorpusDocumentRepository;
 import ru.komendantov.corpabuilder.services.CorpusDocumentUtils;
 import ru.komendantov.corpabuilder.services.MystemService;
 import ru.komendantov.corpabuilder.swagger.interfaces.CorpusDocumentController;
+import ru.komendantov.corpabuilder.utils.UserUtils;
 
 import java.awt.print.Pageable;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/document")
-@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
+@CrossOrigin(origins = "", allowedHeaders = "*", maxAge = 3600)
 public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
     private MystemService mystemService;
@@ -37,6 +41,9 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
     @Autowired
     CorpusDocumentRepository documentRepository;
+
+    @Autowired
+    private UserUtils userUtils;
 
 //    @Autowired
 //    CorpusDocumentRepository documentRepository;
@@ -66,15 +73,27 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
     @PostMapping("/save")
     public ResponseEntity<?> saveCorpusDocument(@RequestBody CorpusDocument document) {
-
+        document.setAuthorID(userUtils.getUser().getId());
+        document.setAuthorUsername(userUtils.getUser().getUsername());
         documentRepository.insert(document);
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
 
     @PostMapping("/search")
-    public List<SearchResult> search(@RequestBody SearchRequest searchRequest, Pageable page) {
+    public List<SearchResult> search(@RequestBody SearchRequest searchRequest, Integer page) {
 
+
+        //documentRepository.getAllByTitle()
+
+
+        List<CorpusDocument> s = documentRepository.getAllByAuthorUsername(searchRequest.getUsername());
+
+        s.toString();
+
+
+        List<CorpusDocument> s1 = documentRepository.getAllByAuthorUsernameAndAndWords(searchRequest.getUsername(), searchRequest.getGr());
+        s1.toString();
         //        Page<TextRepository> pag = textRepository.findAll();
         SearchResult hh = new SearchResult();
         //hh.setCorpusDocumentID("tyhft5564345");

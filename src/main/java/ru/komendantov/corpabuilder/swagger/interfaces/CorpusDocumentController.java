@@ -35,7 +35,7 @@ public interface CorpusDocumentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok")
     })
-    List<SearchResult> search(@RequestBody SearchRequest searchRequest, Pageable page);
+    List<SearchResult> search(@RequestBody SearchRequest searchRequest, Integer page);
 
     @ApiOperation(value = "Получить документ по ID", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {
