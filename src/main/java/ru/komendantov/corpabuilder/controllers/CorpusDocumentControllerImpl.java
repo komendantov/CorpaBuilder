@@ -20,14 +20,11 @@ import ru.komendantov.corpabuilder.swagger.interfaces.CorpusDocumentController;
 
 import java.awt.print.Pageable;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/document")
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
     private MystemService mystemService;
