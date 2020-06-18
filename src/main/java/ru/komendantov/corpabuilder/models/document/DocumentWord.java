@@ -1,37 +1,33 @@
-package ru.komendantov.corpabuilder.models.corpus;
+package ru.komendantov.corpabuilder.models.document;
 
 import com.fasterxml.jackson.annotation.*;
 import ru.komendantov.corpabuilder.models.Analysis;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "analysis",
         "text"
 })
-public class CorpusWord implements Serializable {
+public class DocumentWord implements Serializable {
 
     @JsonProperty("analysis")
     private Analysis analysis = null;
     @JsonProperty("text")
     private String text;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     /**
      * No args constructor for use in serialization
      */
-    public CorpusWord() {
+    public DocumentWord() {
     }
 
     /**
      * @param text
      * @param analysis
      */
-    public CorpusWord(Analysis analysis, String text) {
+    public DocumentWord(Analysis analysis, String text) {
         super();
         this.analysis = analysis;
         this.text = text;
@@ -47,7 +43,7 @@ public class CorpusWord implements Serializable {
         this.analysis = analysis;
     }
 
-    public CorpusWord withAnalysis(Analysis analysis) {
+    public DocumentWord withAnalysis(Analysis analysis) {
         this.analysis = analysis;
         return this;
     }
@@ -62,24 +58,10 @@ public class CorpusWord implements Serializable {
         this.text = text;
     }
 
-    public CorpusWord withText(String text) {
+    public DocumentWord withText(String text) {
         this.text = text;
         return this;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
-    }
-
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
-    public CorpusWord withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
-    }
 
 }

@@ -2,24 +2,21 @@ package ru.komendantov.corpabuilder.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 import ru.komendantov.corpabuilder.models.Word;
-import ru.komendantov.corpabuilder.models.corpus.Corpus;
-import ru.komendantov.corpabuilder.models.corpus.SearchResult;
+import ru.komendantov.corpabuilder.models.document.CorpusDocument;
+import ru.komendantov.corpabuilder.models.document.DocumentWord;
+import ru.komendantov.corpabuilder.models.document.SearchResult;
 import ru.komendantov.corpabuilder.models.requests.AnalysePostRequest;
 import ru.komendantov.corpabuilder.models.requests.SearchRequest;
-import ru.komendantov.corpabuilder.repositories.TextRepository;
-import ru.komendantov.corpabuilder.services.CorpusUtils;
+import ru.komendantov.corpabuilder.repositories.CorpusDocumentRepository;
+import ru.komendantov.corpabuilder.services.CorpusDocumentUtils;
 import ru.komendantov.corpabuilder.services.MystemService;
-import ru.komendantov.corpabuilder.swagger.interfaces.CorpusController;
+import ru.komendantov.corpabuilder.swagger.interfaces.CorpusDocumentController;
 
 import java.awt.print.Pageable;
 import java.io.IOException;
@@ -29,24 +26,27 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/corpus")
+@RequestMapping("/api/v1/document")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class CorpusControllerImpl implements CorpusController {
+public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
     private MystemService mystemService;
 
     @Autowired
-    private CorpusUtils corpusUtils;
+    private CorpusDocumentUtils documentUtils;
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    TextRepository textRepository;
+    CorpusDocumentRepository documentRepository;
+
+//    @Autowired
+//    CorpusDocumentRepository documentRepository;
 
     @PostMapping("/analyse")
     public List<Word> analyseText(@RequestBody AnalysePostRequest analysePostRequest, @RequestParam(name = "doReplaces", defaultValue = "false")
-            boolean doReplaces) throws IOException, InterruptedException {
+            boolean doReplaces) throws IOException {
         String analysedText;
         String text = analysePostRequest.getText();
         HashMap<Integer, String> textWithReplacesMap;
@@ -54,12 +54,12 @@ public class CorpusControllerImpl implements CorpusController {
         if (doReplaces) {
             String[] textArray = text.split("\\b");
             textList = Arrays.asList(textArray);
-            textWithReplacesMap = corpusUtils.doReplacesInText(userDetailsService.getUserReplaces(), textList);
+            textWithReplacesMap = documentUtils.doReplacesInText(userDetailsService.getUserReplaces(), textList);
             text = String.join(" ", textWithReplacesMap.values());
         }
         analysedText = mystemService.analyseText(text);
         if (doReplaces) {
-            analysedText = corpusUtils.revertReplaces(analysedText, textList).toString();
+            analysedText = documentUtils.revertReplaces(analysedText, textList).toString();
         }
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -68,27 +68,52 @@ public class CorpusControllerImpl implements CorpusController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveCorpus(@RequestBody Corpus corpus) {
+    public ResponseEntity<?> saveCorpusDocument(@RequestBody CorpusDocument document) {
 
-
+        documentRepository.insert(document);
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
 
 
     @PostMapping("/search")
-    public SearchResult search(@RequestBody SearchRequest searchRequest, Pageable page) {
+    public List<SearchResult> search(@RequestBody SearchRequest searchRequest, Pageable page) {
 
-       // Page<TextRepository> pag = textRepository.findAll(page);
+        //        Page<TextRepository> pag = textRepository.findAll();
+        SearchResult hh = new SearchResult();
+        //hh.setCorpusDocumentID("tyhft5564345");
 
 
-        return new SearchResult();
+        ArrayList<DocumentWord> hh1 = new ArrayList<>();
+
+        hh.setDocumentExcerpt(hh1);
+        List<SearchResult> results = new ArrayList<>();
+        return results;
     }
 
     @Override
     @GetMapping("/{id}")
-    public Corpus getCorpus(String id) {
+    public CorpusDocument getCorpusDocument(String id) {
+        return null;
+    }
+
+    @Override
+    @GetMapping("/user/me")
+    public ArrayList<SearchResult> getUserDocuments() {
+        return null;
+    }
+
+    @Override
+    @PutMapping("/{id}")
+    public ResponseEntity<?> changeCorpus(String documentId) {
+        return null;
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCorpus(String documentId) {
         return null;
     }
 
 //    public ResponseEntity<String>
+
 }

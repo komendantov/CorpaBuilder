@@ -1,10 +1,10 @@
 package ru.komendantov.corpabuilder.models;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -13,13 +13,13 @@ import java.util.Map;
 })
 public class Analysis implements Serializable {
 
-    private final static long serialVersionUID = -7392792371225545626L;
     @JsonProperty("lex")
     private String lex;
     @JsonProperty("gr")
     private String gr;
-    @JsonIgnore
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    @JsonProperty("qual")
+    private String qual;
 
     /**
      * No args constructor for use in serialization
@@ -47,10 +47,6 @@ public class Analysis implements Serializable {
         this.lex = lex;
     }
 
-    public Analysis withLex(String lex) {
-        this.lex = lex;
-        return this;
-    }
 
     @JsonProperty("gr")
     public String getGr() {
@@ -62,24 +58,14 @@ public class Analysis implements Serializable {
         this.gr = gr;
     }
 
-    public Analysis withGr(String gr) {
-        this.gr = gr;
-        return this;
+
+    public String getQual() {
+        return qual;
     }
 
-    @JsonAnyGetter
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    public void setQual(String qual) {
+        this.qual = qual;
     }
 
-    @JsonAnySetter
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-    }
-
-    public Analysis withAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
-        return this;
-    }
 
 }

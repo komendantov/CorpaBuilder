@@ -13,7 +13,6 @@ import java.util.Map;
 })
 public class Analysis implements Serializable {
 
-    private final static long serialVersionUID = -7392792371225545626L;
     @JsonProperty("lex")
     private String lex;
     @JsonProperty("gr")

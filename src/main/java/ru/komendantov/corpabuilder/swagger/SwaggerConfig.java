@@ -26,7 +26,7 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("ru.komendantov"))
                 .paths(PathSelectors.any())
                 .build()
-                .tags(new Tag("corpus", "API работы с корпусами"))
+                .tags(new Tag("document", "API работы с корпусами"))
                 .tags(new Tag("users", "API работы с пользователями"))
                 .tags(new Tag("authentication", "API аутентификации"))
                 .securitySchemes(Arrays.asList(apiKey()));
