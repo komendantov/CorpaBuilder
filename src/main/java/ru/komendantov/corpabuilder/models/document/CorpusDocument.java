@@ -20,4 +20,5 @@ public class CorpusDocument {
     private DateTime creationDate = new DateTime();
     private List<DocumentWord> words = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
+    private String id;
 }

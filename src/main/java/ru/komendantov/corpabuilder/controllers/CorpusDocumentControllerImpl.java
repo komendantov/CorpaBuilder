@@ -90,7 +90,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Override
     @GetMapping("/{id}")
     public CorpusDocument getCorpusDocument(String id) {
-        return null;
+       return documentRepository.getById(id);
     }
 
     @Override

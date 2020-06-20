@@ -11,7 +11,7 @@ public interface CorpusDocumentRepository extends MongoRepository<CorpusDocument
     public List<CorpusDocument> getAllByTitle(String title);
 
     public List<CorpusDocument> getAllByWordsAnalysisLex(String s);
-
+    CorpusDocument getById(String id);
     ///   public List<Word> getAllByWords
     // public Word findByText(String firstName);
     //  public List<Word> findByLastName(String lastName);
