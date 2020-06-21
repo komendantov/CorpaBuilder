@@ -20,10 +20,7 @@ import ru.komendantov.corpabuilder.swagger.interfaces.CorpusDocumentController;
 import ru.komendantov.corpabuilder.utils.UserUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/document")
@@ -107,8 +104,9 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
     @Override
     @GetMapping("/{id}")
-    public CorpusDocument getCorpusDocument(@PathVariable String id) {
-        return documentRepository.getFirstBy_id(id);
+    public ResponseEntity getCorpusDocument(@PathVariable String id) {
+        Optional<CorpusDocument> corpusDocument = documentRepository.getFirstBy_id(id);
+        return corpusDocument.map(document -> new ResponseEntity(document, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @Override

@@ -40,7 +40,7 @@ public interface CorpusDocumentController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok")
     })
-    CorpusDocument getCorpusDocument(@ApiParam String id);
+    ResponseEntity getCorpusDocument(@ApiParam String id);
 
     @ApiOperation(value = "Получить документы пользователя", authorizations = {@Authorization(value = "Bearer")})
     @ApiResponses(value = {

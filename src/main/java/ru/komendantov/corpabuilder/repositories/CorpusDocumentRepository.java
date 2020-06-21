@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.repository.Query;
 import ru.komendantov.corpabuilder.models.document.CorpusDocument;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CorpusDocumentRepository extends MongoRepository<CorpusDocument, String> {
 
@@ -25,7 +26,7 @@ public interface CorpusDocumentRepository extends MongoRepository<CorpusDocument
 
 CorpusDocument getFirstByAuthorUsername(String authorUsername);
 
-CorpusDocument getFirstBy_id(String _id);
+Optional<CorpusDocument> getFirstBy_id(String _id);
     ///   public List<Word> getAllByWords
     // public Word findByText(String firstName);
     //  public List<Word> findByLastName(String lastName);
