@@ -18,7 +18,6 @@ import ru.komendantov.corpabuilder.services.CorpusDocumentUtils;
 import ru.komendantov.corpabuilder.services.MystemService;
 import ru.komendantov.corpabuilder.swagger.interfaces.CorpusDocumentController;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.*;
 
@@ -75,6 +74,17 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @PostMapping("/search")
     public List<SearchResult> search(@RequestBody SearchRequest searchRequest, Pageable page) {
 
+
+        //documentRepository.getAllByTitle()
+
+
+        List<CorpusDocument> s = documentRepository.getAllByAuthorUsername(searchRequest.getUsername());
+
+        s.toString();
+
+
+//        List<CorpusDocument> s1 = documentRepository.getAllByAuthorUsernameAndAndWords(searchRequest.getUsername(), searchRequest.getGr());
+      //  s1.toString();
         //        Page<TextRepository> pag = textRepository.findAll();
         SearchResult hh = new SearchResult();
         //hh.setCorpusDocumentID("tyhft5564345");
@@ -89,8 +99,8 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
     @Override
     @GetMapping("/{id}")
-    public CorpusDocument getCorpusDocument(String id) {
-       return documentRepository.getById(id);
+    public CorpusDocument getCorpusDocument(@PathVariable String id) {
+        return documentRepository.getFirstBy_id(id);
     }
 
     @Override

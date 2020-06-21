@@ -9,7 +9,6 @@ import ru.komendantov.corpabuilder.models.document.SearchResult;
 import ru.komendantov.corpabuilder.models.requests.AnalysePostRequest;
 import ru.komendantov.corpabuilder.models.requests.SearchRequest;
 
-import java.awt.print.Pageable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
