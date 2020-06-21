@@ -2,15 +2,15 @@ package ru.komendantov.corpabuilder.repositories;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import ru.komendantov.corpabuilder.models.document.CorpusDocument;
-
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CorpusDocumentRepository extends MongoRepository<CorpusDocument, String> {
 
-    public List<CorpusDocument> getAllByTitle(String title);
+     List<CorpusDocument> getAllByTitle(String title);
 
      List<CorpusDocument> getAllByWordsAnalysisLex(String s);
 //     CorpusDocument getAllById(String id);

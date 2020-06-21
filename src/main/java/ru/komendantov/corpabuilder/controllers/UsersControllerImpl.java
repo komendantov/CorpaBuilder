@@ -4,23 +4,20 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.komendantov.corpabuilder.auth.models.User;
-import ru.komendantov.corpabuilder.auth.models.UserDetailsImpl;
 import ru.komendantov.corpabuilder.auth.models.UserSettings;
 import ru.komendantov.corpabuilder.auth.repositories.UserRepository;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
 import ru.komendantov.corpabuilder.models.requests.UserPasswordPutRequest;
 import ru.komendantov.corpabuilder.models.requests.UserUpdateUsernamePutRequest;
 import ru.komendantov.corpabuilder.swagger.interfaces.UsersController;
+import ru.komendantov.corpabuilder.utils.UserUtils;
 
 import java.util.HashMap;
 
@@ -41,6 +38,9 @@ public class UsersControllerImpl implements UsersController {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private UserUtils userUtils;
+
 
     @GetMapping("/{id}")
     public User getUser(String id) {
@@ -52,7 +52,7 @@ public class UsersControllerImpl implements UsersController {
     @PutMapping("/me/username")
     public User updateUserUsername(@RequestBody UserUpdateUsernamePutRequest userUpdateUsernamePutRequest) {
         //need to check
-        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+        User user = userUtils.getUser();
         user.setUsername(userUpdateUsernamePutRequest.getUsername());
         return userRepository.save(user);
     }
@@ -61,14 +61,14 @@ public class UsersControllerImpl implements UsersController {
     @GetMapping("/me")
     public User getUser() {
         //need to check
-        return userRepository.getByUsername(getUserDetails().getUsername()).get();
+        return userUtils.getUser();
     }
 
 
     @GetMapping("/me/settings")
     public UserSettings getUserSettings() {
         //need to check
-        return userRepository.getByUsername(getUserDetails().getUsername()).get().getUserSettings();
+        return userUtils.getUser().getUserSettings();
     }
 
 //    @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -86,7 +86,7 @@ public class UsersControllerImpl implements UsersController {
     @GetMapping("/me/settings/replaces")
     public HashMap<String, String> getUserReplaces() {
         //need to check
-        return userRepository.getByUsername(getUserDetails().getUsername()).get().getUserSettings().getReplaces();
+        return userUtils.getUser().getUserSettings().getReplaces();
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -94,7 +94,7 @@ public class UsersControllerImpl implements UsersController {
     @PutMapping("/me/settings/replaces")
     public void setUserReplaces(@RequestBody HashMap<String, String> replaces) {
         //need to check
-        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+        User user = userUtils.getUser();
         user.getUserSettings().setReplaces(replaces);
         userRepository.save(user);
     }
@@ -103,7 +103,7 @@ public class UsersControllerImpl implements UsersController {
     @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/password")
     public void updateUserPassword(@RequestBody UserPasswordPutRequest userPasswordPutRequest) {
-        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
+        User user = userUtils.getUser();
         if (!userPasswordPutRequest.getNewPassword().equals(userPasswordPutRequest.getNewPasswordConfirm()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password mismatch");
         try {
@@ -115,14 +115,5 @@ public class UsersControllerImpl implements UsersController {
         user.setPassword(encoder.encode(userPasswordPutRequest.getNewPassword()));
 
         userRepository.save(user);
-    }
-
-
-    private UserDetailsImpl getUserDetails() {
-        //need checking if user exists
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            return (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        } else throw new RuntimeException();
     }
 }

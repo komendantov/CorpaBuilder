@@ -17,13 +17,14 @@ import ru.komendantov.corpabuilder.repositories.CorpusDocumentRepository;
 import ru.komendantov.corpabuilder.services.CorpusDocumentUtils;
 import ru.komendantov.corpabuilder.services.MystemService;
 import ru.komendantov.corpabuilder.swagger.interfaces.CorpusDocumentController;
+import ru.komendantov.corpabuilder.utils.UserUtils;
 
 import java.io.IOException;
 import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/document")
-@CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
+@CrossOrigin(origins = "", allowedHeaders = "*", maxAge = 3600)
 public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
     private MystemService mystemService;
@@ -36,6 +37,9 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
     @Autowired
     CorpusDocumentRepository documentRepository;
+
+    @Autowired
+    private UserUtils userUtils;
 
 //    @Autowired
 //    CorpusDocumentRepository documentRepository;
@@ -65,7 +69,8 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
     @PostMapping("/save")
     public ResponseEntity<?> saveCorpusDocument(@RequestBody CorpusDocument document) {
-
+        document.setAuthorID(userUtils.getUser().getId());
+        document.setAuthorUsername(userUtils.getUser().getUsername());
         documentRepository.insert(document);
         return new ResponseEntity<String>(HttpStatus.CREATED);
     }
