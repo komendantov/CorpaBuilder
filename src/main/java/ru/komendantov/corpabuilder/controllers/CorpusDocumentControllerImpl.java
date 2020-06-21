@@ -72,7 +72,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
 
     @PostMapping("/search")
-    public List<SearchResult> search(@RequestBody SearchRequest searchRequest, Pageable page) {
+    public List<SearchResult> search(@RequestBody SearchRequest searchRequest) {
 
 
         //documentRepository.getAllByTitle()
