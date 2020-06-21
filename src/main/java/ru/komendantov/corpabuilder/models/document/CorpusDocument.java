@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -21,4 +22,5 @@ public class CorpusDocument {
     private List<DocumentWord> words = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
     private String authorUsername;
+    private String _id;
 }
