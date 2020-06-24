@@ -42,7 +42,7 @@ public class CorpusDocument {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDateTime dateOfChange =  LocalDateTime.now();
+    private LocalDateTime dateOfChange = LocalDateTime.now();
     private List<DocumentWord> words = new ArrayList<>();
     private List<String> tags = new ArrayList<>();
     @ApiModelProperty(hidden = true)

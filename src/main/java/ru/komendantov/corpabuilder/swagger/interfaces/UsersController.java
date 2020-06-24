@@ -12,7 +12,7 @@ import ru.komendantov.corpabuilder.models.requests.UserUpdateUsernamePutRequest;
 
 import java.util.HashMap;
 
-@Api(value = "users",tags = "users")
+@Api(value = "users", tags = "users")
 public interface UsersController {
 
     @ApiOperation(value = "Пролучить информацию о пользователе по id", authorizations = {@Authorization(value = "Bearer")})

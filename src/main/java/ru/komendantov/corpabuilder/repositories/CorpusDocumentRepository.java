@@ -1,6 +1,7 @@
 package ru.komendantov.corpabuilder.repositories;
 
 import org.springframework.data.domain.Sort;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import ru.komendantov.corpabuilder.models.document.CorpusDocument;
@@ -20,8 +21,5 @@ public interface CorpusDocumentRepository extends MongoRepository<CorpusDocument
 
     Optional<CorpusDocument> getFirstBy_id(String _id);
 
-
-
-//    Optional<CorpusDocument>
 
 }

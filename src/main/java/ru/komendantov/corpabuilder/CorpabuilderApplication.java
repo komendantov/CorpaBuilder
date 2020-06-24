@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.context.request.RequestContextListener;
 
 @SpringBootApplication
-@CrossOrigin( origins = "*" )
+@CrossOrigin(origins = "*")
 public class CorpabuilderApplication {
 
     public static void main(String[] args) {

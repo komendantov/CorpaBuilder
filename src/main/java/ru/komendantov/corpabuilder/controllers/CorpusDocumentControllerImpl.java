@@ -2,8 +2,8 @@ package ru.komendantov.corpabuilder.controllers;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
@@ -45,6 +45,9 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
     private UserUtils userUtils;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
 //    @Autowired
 //    CorpusDocumentRepository documentRepository;
 
@@ -84,29 +87,85 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     public List<SearchResult> search(@RequestBody SearchRequest searchRequest) {
 
 
-
-
         Query query = new Query();
-        query.addCriteria(Criteria.where("title").regex("title",searchRequest.getTitle()));
-        query.addCriteria(Criteria.where("title").regex("title",searchRequest.getTitle()));
-        query.addCriteria(Criteria.where("words.text").is(searchRequest.getText()));
+        if (searchRequest.getTitle() != null && !searchRequest.getTitle().isEmpty()) {
+            query.addCriteria(Criteria.where("title").regex(searchRequest.getTitle()));
+        }
+        if (searchRequest.getText() != null && !searchRequest.getText().isEmpty()) {
+            query.addCriteria(Criteria.where("words.text").regex(searchRequest.getText()));
+        }
+        if (searchRequest.getGr() != null && !searchRequest.getGr().isEmpty()) {
+            query.addCriteria(Criteria.where("words.analysis.gr").regex(searchRequest.getGr()));
+        }
+        if (searchRequest.getAuthorUsername() != null && !searchRequest.getAuthorUsername().isEmpty()) {
+            query.addCriteria(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername()));
+        }
+        if (searchRequest.getLex() != null && !searchRequest.getLex().isEmpty()) {
+            query.addCriteria(Criteria.where("words.analysis.lex").regex(searchRequest.getLex()));
+        }
 
-        List<CorpusDocument> s = documentRepository.getAllByAuthorUsername(searchRequest.getUsername());
+        if (searchRequest.getTags() != null && !searchRequest.getTags().isEmpty()) {
+            query.addCriteria(Criteria.where("tags").in(searchRequest.getTags()));
+        }
 
-        s.toString();
+        List<CorpusDocument> requestResult = mongoTemplate.find(query, CorpusDocument.class);
 
-
-//        List<CorpusDocument> s1 = documentRepository.getAllByAuthorUsernameAndAndWords(searchRequest.getUsername(), searchRequest.getGr());
-        //  s1.toString();
-        //        Page<TextRepository> pag = textRepository.findAll();
-        SearchResult hh = new SearchResult();
-        //hh.setCorpusDocumentID("tyhft5564345");
-
-
-        ArrayList<DocumentWord> hh1 = new ArrayList<>();
-
-        hh.setDocumentExcerpt(hh1);
         List<SearchResult> results = new ArrayList<>();
+
+        requestResult.stream().forEach(document -> {
+
+
+            SearchResult searchResult = new SearchResult();
+            searchResult.setAuthorUsername(document.getAuthorUsername());
+            searchResult.setDocumentID(document.get_id());
+            searchResult.setDocumentTitle(document.getTitle());
+
+            List<DocumentWord> documentExcept;
+            if (document.getWords().size() > 10)
+                documentExcept = document.getWords().subList(0, 10);
+            else
+                documentExcept = document.getWords().subList(0, document.getWords().size());
+
+//            int startIndex = 0;
+//            for (int i = 0; i < requestResult.size(); i++
+//            ) {
+//                 startIndex = 0;
+//                if (searchRequest.getTitle() != null && !searchRequest.getTitle().isEmpty() && requestResult.get(i).getTitle().contains(searchRequest.getTitle())) {
+//                    startIndex = 1;
+//                }
+//                if (searchRequest.getText() != null && !searchRequest.getText().isEmpty()) {
+//
+//                    for (int j = 0; j < requestResult.get(i).getWords().size(); j++) {
+//                        if (requestResult.get(i).getWords().get(j).getText().contains(searchRequest.getText())) {
+//                            startIndex = j;
+//                        }
+//                        if (requestResult.get(i).getWords().get(j).getAnalysis().getGr().contains(searchRequest.getGr())) {
+//                            startIndex = j;
+//                        }
+//                        if (requestResult.get(i).getWords().get(j).getAnalysis().getLex().contains(searchRequest.getLex())) {
+//                            startIndex = j;
+//                        }
+//                    }
+//                }
+
+
+//            }
+//            for (int s = startIndex; s < startIndex + 6 && s < requestResult.get(i).getWords().size(); s++) {
+//                DocumentWord d = requestResult.get(i).getWords().get(s);
+//                if (s == startIndex) {
+//                    String te = "<b>" + d.getText() + "</b>";
+//                    d.setText(te);
+//                }
+//                documentExcept.add(d);
+//            }
+
+
+            searchResult.setDocumentExcerpt(documentExcept);
+            results.add(searchResult);
+
+        });
+
+
         return results;
     }
 
@@ -145,7 +204,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
         try {
             documentRepository.deleteById(id);
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }

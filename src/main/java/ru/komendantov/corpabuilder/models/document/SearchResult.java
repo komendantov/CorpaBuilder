@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +14,5 @@ public class SearchResult {
     private String documentID;
     private String authorUsername;
     private String documentTitle;
-    private ArrayList<DocumentWord> documentExcerpt;
+    private List<DocumentWord> documentExcerpt;
 }
