@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.komendantov.corpabuilder.auth.services.UserDetailsServiceImpl;
+import ru.komendantov.corpabuilder.models.Analysis;
 import ru.komendantov.corpabuilder.models.Word;
 import ru.komendantov.corpabuilder.models.document.CorpusDocument;
 import ru.komendantov.corpabuilder.models.document.DocumentWord;
@@ -114,17 +115,46 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
         requestResult.stream().forEach(document -> {
 
+            List<DocumentWord> documentWords = document.getWords();
 
             SearchResult searchResult = new SearchResult();
             searchResult.setAuthorUsername(document.getAuthorUsername());
             searchResult.setDocumentID(document.get_id());
             searchResult.setDocumentTitle(document.getTitle());
 
+
+            int exceptIndex = 0;
+            for (int i = 0; i < documentWords.size(); i++) {
+                exceptIndex = 0;
+                String text = documentWords.get(i).getText();
+                Analysis analysis = documentWords.get(i).getAnalysis();
+
+                if (text != null && !text.isEmpty() && searchRequest.getText() != null && !searchRequest.getText().isEmpty() && text.contains(searchRequest.getText())) {
+                    text = "<b>" + text + "</b>";
+                    documentWords.get(i).setText(text);
+                    exceptIndex = i;
+                }
+
+
+                if (analysis != null && !analysis.getLex().isEmpty() && searchRequest.getLex() != null && !searchRequest.getLex().isEmpty() && analysis.getLex().contains(searchRequest.getLex())) {
+                    text = "<b>" + text + "</b>";
+                    documentWords.get(i).setText(text);
+                    exceptIndex = i;
+                }
+
+                if (analysis != null && !analysis.getGr().isEmpty() && searchRequest.getGr() != null && !searchRequest.getGr().isEmpty() && analysis.getGr().contains(searchRequest.getGr())) {
+                    text = "<b>" + text + "</b>";
+                    documentWords.get(i).setText(text);
+                    exceptIndex = i;
+                }
+
+            }
+
             List<DocumentWord> documentExcept;
-            if (document.getWords().size() > 10)
-                documentExcept = document.getWords().subList(0, 10);
+            if (document.getWords().size() > exceptIndex + 5)
+                documentExcept = documentWords.subList(exceptIndex - 5, exceptIndex + 5);
             else
-                documentExcept = document.getWords().subList(0, document.getWords().size());
+                documentExcept = documentWords.subList(exceptIndex, document.getWords().size());
 
 //            int startIndex = 0;
 //            for (int i = 0; i < requestResult.size(); i++
