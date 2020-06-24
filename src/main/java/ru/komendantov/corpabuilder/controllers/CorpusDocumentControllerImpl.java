@@ -29,7 +29,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/document")
-@CrossOrigin(origins = "", allowedHeaders = "*", maxAge = 3600)
+//@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*", maxAge = 3600)
 public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
     private MystemService mystemService;
