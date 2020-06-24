@@ -3,6 +3,7 @@ package ru.komendantov.corpabuilder.controllers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -51,8 +52,8 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-//    @Autowired
-//    CorpusDocumentRepository documentRepository;
+    @Value("${application.searchExceptLength}")
+    int exceptLength;
 
     @PostMapping("/analyse")
     public List<Word> analyseText(@RequestBody AnalysePostRequest analysePostRequest, @RequestParam(name = "doReplaces", defaultValue = "false")
@@ -89,7 +90,6 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @PostMapping("/search")
     public List<SearchResult> search(@RequestBody SearchRequest searchRequest) {
 
-
         Query query = new Query();
         if (searchRequest.getTitle() != null && !searchRequest.getTitle().isEmpty()) {
             query.addCriteria(Criteria.where("title").regex(searchRequest.getTitle()));
@@ -115,19 +115,16 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
 
         List<SearchResult> results = new ArrayList<>();
 
-        requestResult.stream().forEach(document -> {
-
+        requestResult.forEach(document -> {
             List<DocumentWord> documentWords = document.getWords();
-
             SearchResult searchResult = new SearchResult();
             searchResult.setAuthorUsername(document.getAuthorUsername());
             searchResult.setDocumentID(document.get_id());
             searchResult.setDocumentTitle(document.getTitle());
 
-
             int exceptIndex = 0;
             for (int i = 0; i < documentWords.size(); i++) {
-                exceptIndex = 0;
+//                exceptIndex = 0;
                 String text = documentWords.get(i).getText();
                 Analysis analysis = documentWords.get(i).getAnalysis();
 
@@ -135,6 +132,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
                     text = "<b>" + text + "</b>";
                     documentWords.get(i).setText(text);
                     exceptIndex = i;
+                    break;
                 }
 
 
@@ -142,59 +140,24 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
                     text = "<b>" + text + "</b>";
                     documentWords.get(i).setText(text);
                     exceptIndex = i;
+                    break;
                 }
 
                 if (analysis != null && !analysis.getGr().isEmpty() && searchRequest.getGr() != null && !searchRequest.getGr().isEmpty() && analysis.getGr().contains(searchRequest.getGr())) {
                     text = "<b>" + text + "</b>";
                     documentWords.get(i).setText(text);
                     exceptIndex = i;
+                    break;
                 }
-
             }
 
             List<DocumentWord> documentExcept;
-            if (document.getWords().size() > exceptIndex + 5)
-                documentExcept = documentWords.subList(exceptIndex - 5, exceptIndex + 5);
+            if (document.getWords().size() > exceptIndex + exceptLength)
+                documentExcept = documentWords.subList(exceptIndex, exceptIndex + exceptLength);
             else
                 documentExcept = documentWords.subList(exceptIndex, document.getWords().size());
-
-//            int startIndex = 0;
-//            for (int i = 0; i < requestResult.size(); i++
-//            ) {
-//                 startIndex = 0;
-//                if (searchRequest.getTitle() != null && !searchRequest.getTitle().isEmpty() && requestResult.get(i).getTitle().contains(searchRequest.getTitle())) {
-//                    startIndex = 1;
-//                }
-//                if (searchRequest.getText() != null && !searchRequest.getText().isEmpty()) {
-//
-//                    for (int j = 0; j < requestResult.get(i).getWords().size(); j++) {
-//                        if (requestResult.get(i).getWords().get(j).getText().contains(searchRequest.getText())) {
-//                            startIndex = j;
-//                        }
-//                        if (requestResult.get(i).getWords().get(j).getAnalysis().getGr().contains(searchRequest.getGr())) {
-//                            startIndex = j;
-//                        }
-//                        if (requestResult.get(i).getWords().get(j).getAnalysis().getLex().contains(searchRequest.getLex())) {
-//                            startIndex = j;
-//                        }
-//                    }
-//                }
-
-
-//            }
-//            for (int s = startIndex; s < startIndex + 6 && s < requestResult.get(i).getWords().size(); s++) {
-//                DocumentWord d = requestResult.get(i).getWords().get(s);
-//                if (s == startIndex) {
-//                    String te = "<b>" + d.getText() + "</b>";
-//                    d.setText(te);
-//                }
-//                documentExcept.add(d);
-//            }
-
-
             searchResult.setDocumentExcerpt(documentExcept);
             results.add(searchResult);
-
         });
 
 

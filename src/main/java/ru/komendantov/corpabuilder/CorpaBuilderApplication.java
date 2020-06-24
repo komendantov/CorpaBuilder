@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestContextListener;
 
 @SpringBootApplication
-public class CorpabuilderApplication {
+public class CorpaBuilderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CorpabuilderApplication.class, args);
+        SpringApplication.run(CorpaBuilderApplication.class, args);
     }
 
     @Bean
