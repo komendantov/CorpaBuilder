@@ -89,14 +89,13 @@ public class UsersControllerImpl implements UsersController {
         return userUtils.getUser().getUserSettings().getReplaces();
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
+
     @PutMapping("/me/settings/replaces")
-    public void setUserReplaces(@RequestBody HashMap<String, String> replaces) {
+    public User setUserReplaces(@RequestBody HashMap<String, String> replaces) {
         //need to check
         User user = userUtils.getUser();
         user.getUserSettings().setReplaces(replaces);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -32,6 +32,6 @@ public interface UsersController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Установить замены для пользователя", authorizations = {@Authorization(value = "Bearer")})
-    void setUserReplaces(@RequestBody HashMap<String, String> replaces);
+    User setUserReplaces(@RequestBody HashMap<String, String> replaces);
 
 }
