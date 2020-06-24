@@ -122,42 +122,44 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
             searchResult.setDocumentID(document.get_id());
             searchResult.setDocumentTitle(document.getTitle());
 
-            int exceptIndex = 0;
+            ArrayList<Integer> exceptIndex = new ArrayList<>();
             for (int i = 0; i < documentWords.size(); i++) {
 //                exceptIndex = 0;
                 String text = documentWords.get(i).getText();
                 Analysis analysis = documentWords.get(i).getAnalysis();
 
                 if (text != null && !text.isEmpty() && searchRequest.getText() != null && !searchRequest.getText().isEmpty() && text.contains(searchRequest.getText())) {
-                    text = "<b>" + text + "</b>";
+                    //     text = "<b>" + text + "</b>";
                     documentWords.get(i).setText(text);
-                    exceptIndex = i;
-                    break;
+                    exceptIndex.add(i);
+
                 }
 
 
                 if (analysis != null && !analysis.getLex().isEmpty() && searchRequest.getLex() != null && !searchRequest.getLex().isEmpty() && analysis.getLex().contains(searchRequest.getLex())) {
-                    text = "<b>" + text + "</b>";
-                    documentWords.get(i).setText(text);
-                    exceptIndex = i;
-                    break;
+                    //    text = "<b>" + text + "</b>";
+                    //   documentWords.get(i).setText(text);
+                    exceptIndex.add(i);
+
                 }
 
                 if (analysis != null && !analysis.getGr().isEmpty() && searchRequest.getGr() != null && !searchRequest.getGr().isEmpty() && analysis.getGr().contains(searchRequest.getGr())) {
-                    text = "<b>" + text + "</b>";
-                    documentWords.get(i).setText(text);
-                    exceptIndex = i;
-                    break;
+                    //    text = "<b>" + text + "</b>";
+                    //     documentWords.get(i).setText(text);
+                    exceptIndex.add(i);
                 }
             }
 
             List<DocumentWord> documentExcept;
-            if (document.getWords().size() > exceptIndex + exceptLength)
-                documentExcept = documentWords.subList(exceptIndex, exceptIndex + exceptLength);
-            else
-                documentExcept = documentWords.subList(exceptIndex, document.getWords().size());
-            searchResult.setDocumentExcerpt(documentExcept);
-            results.add(searchResult);
+
+            for (int i = 0; i < exceptIndex.size(); i++) {
+                if (document.getWords().size() > exceptIndex.get(i) + exceptLength)
+                    documentExcept = documentWords.subList(exceptIndex.get(i), exceptIndex.get(i) + exceptLength);
+                else
+                    documentExcept = documentWords.subList(exceptIndex.get(i), document.getWords().size());
+                searchResult.setDocumentExcerpt(documentExcept);
+                results.add(searchResult);
+            }
         });
 
 
