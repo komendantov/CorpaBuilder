@@ -30,7 +30,7 @@ import java.util.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
-@RequestMapping("/api/v1/document")
+@RequestMapping(value = "/api/v1/document", produces = APPLICATION_JSON_UTF8_VALUE)
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
 public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     @Autowired
@@ -77,7 +77,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
         });
     }
 
-    @PostMapping(value = "/save", produces = APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/save")
     public ResponseEntity<?> saveCorpusDocument(@RequestBody CorpusDocument document) {
         document.setAuthorID(userUtils.getUser().getId());
         document.setAuthorUsername(userUtils.getUser().getUsername());
