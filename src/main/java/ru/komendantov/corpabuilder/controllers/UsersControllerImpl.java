@@ -71,17 +71,6 @@ public class UsersControllerImpl implements UsersController {
         return userUtils.getUser().getUserSettings();
     }
 
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
-//    @PostMapping("/me/settings")
-//    public void setUserSettings(UserSettings userSettings) {
-//        //need to check
-//        User user = userRepository.getByUsername(getUserDetails().getUsername()).get();
-//        user.setUserSettings(userSettings);
-//        userRepository.save(user);
-//        //return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-//    }
-
 
     @GetMapping("/me/settings/replaces")
     public HashMap<String, String> getUserReplaces() {
@@ -98,8 +87,6 @@ public class UsersControllerImpl implements UsersController {
         return userRepository.save(user);
     }
 
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "", authorizations = {@Authorization(value = "Bearer")})
     @PutMapping("/me/password")
     public void updateUserPassword(@RequestBody UserPasswordPutRequest userPasswordPutRequest) {
         User user = userUtils.getUser();
