@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+
 @RestController
 @RequestMapping("/api/v1/document")
 @CrossOrigin(origins = "*", allowedHeaders = "*", maxAge = 3600)
@@ -75,7 +77,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
         });
     }
 
-    @PostMapping("/save")
+    @PostMapping(value = "/save", produces = APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<?> saveCorpusDocument(@RequestBody CorpusDocument document) {
         document.setAuthorID(userUtils.getUser().getId());
         document.setAuthorUsername(userUtils.getUser().getUsername());
