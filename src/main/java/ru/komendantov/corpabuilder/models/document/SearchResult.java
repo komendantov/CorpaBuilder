@@ -15,4 +15,5 @@ public class SearchResult {
     private String authorUsername;
     private String documentTitle;
     private List<DocumentWord> documentExcerpt;
+    private Integer markedWordIndex = 0;
 }
