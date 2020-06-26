@@ -1,7 +1,5 @@
 package ru.komendantov.corpabuilder.controllers;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -83,6 +81,16 @@ public class UsersControllerImpl implements UsersController {
     public User setUserReplaces(@RequestBody HashMap<String, String> replaces) {
         //need to check
         User user = userUtils.getUser();
+        user.getUserSettings().setReplaces(replaces);
+        return userRepository.save(user);
+    }
+
+    @PostMapping("/me/settings/replaces")
+    public User addUserReplaces(@RequestBody HashMap<String, String> replace) {
+        //need to check
+        User user = userUtils.getUser();
+        HashMap<String, String> replaces = user.getUserSettings().getReplaces();
+        replaces.putAll(replace);
         user.getUserSettings().setReplaces(replaces);
         return userRepository.save(user);
     }

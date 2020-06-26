@@ -35,6 +35,9 @@ public interface UsersController {
     @ApiOperation(value = "Установить замены для пользователя", authorizations = {@Authorization(value = "Bearer")})
     User setUserReplaces(@RequestBody HashMap<String, String> replaces);
 
+    @ApiOperation(value = "Добавить замену для пользователя", authorizations = {@Authorization(value = "Bearer")})
+    User addUserReplaces(@RequestBody HashMap<String, String> replace);
+
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Обновить пароль пользователя", authorizations = {@Authorization(value = "Bearer")})
     void updateUserPassword(@RequestBody UserPasswordPutRequest userPasswordPutRequest);
