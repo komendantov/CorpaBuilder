@@ -91,80 +91,96 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
     public List<SearchResult> search(@RequestBody SearchRequest searchRequest) {
 
         Query query = new Query();
+        List<Criteria> criteriaList = new ArrayList<>();
         if (searchRequest.getTitle() != null && !searchRequest.getTitle().isEmpty()) {
-            query.addCriteria(Criteria.where("title").regex(searchRequest.getTitle()));
+            // query.addCriteria(Criteria.where("title").regex(searchRequest.getTitle()));
+            criteriaList.add(Criteria.where("title").regex(searchRequest.getTitle(), "i"));
         }
         if (searchRequest.getText() != null && !searchRequest.getText().isEmpty()) {
-            query.addCriteria(Criteria.where("words.text").regex(searchRequest.getText()));
+            //  query.addCriteria(Criteria.where("words.text").regex(searchRequest.getText()));
+            criteriaList.add(Criteria.where("words.text").regex(searchRequest.getText(), "i"));
         }
         if (searchRequest.getGr() != null && !searchRequest.getGr().isEmpty()) {
-            query.addCriteria(Criteria.where("words.analysis.gr").regex(searchRequest.getGr()));
+            // query.addCriteria(Criteria.where("words.analysis.gr").regex(searchRequest.getGr()));
+            criteriaList.add(Criteria.where("words.analysis.gr").regex(searchRequest.getGr(), "i"));
         }
         if (searchRequest.getAuthorUsername() != null && !searchRequest.getAuthorUsername().isEmpty()) {
-            query.addCriteria(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername()));
+            //      query.addCriteria(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername()));
+            criteriaList.add(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername(), "i"));
         }
         if (searchRequest.getLex() != null && !searchRequest.getLex().isEmpty()) {
-            query.addCriteria(Criteria.where("words.analysis.lex").regex(searchRequest.getLex()));
+            // query.addCriteria(Criteria.where("words.analysis.lex").regex(searchRequest.getLex()));
+            criteriaList.add(Criteria.where("words.analysis.lex").regex(searchRequest.getLex(), "i"));
         }
 
         if (searchRequest.getTags() != null && !searchRequest.getTags().isEmpty()) {
-            query.addCriteria(Criteria.where("tags").in(searchRequest.getTags()));
+            //  query.addCriteria(Criteria.where("tags").in(searchRequest.getTags()));
+            criteriaList.add(Criteria.where("tags").in(searchRequest.getTags(), "i"));
         }
 
-        List<CorpusDocument> requestResult = mongoTemplate.find(query, CorpusDocument.class);
+        for (Criteria criteria : criteriaList
+        ) {
+            query.addCriteria(criteria);
+        }
+        List<CorpusDocument> requestResult;
+
+        if (criteriaList.isEmpty() || criteriaList.size()==0)
+            requestResult = mongoTemplate.findAll(CorpusDocument.class);
+        else
+            requestResult = mongoTemplate.find(query, CorpusDocument.class);
 
         List<SearchResult> results = new ArrayList<>();
 
         requestResult.forEach(document -> {
             List<DocumentWord> documentWords = document.getWords();
-            SearchResult searchResult = new SearchResult();
-            searchResult.setAuthorUsername(document.getAuthorUsername());
-            searchResult.setDocumentID(document.get_id());
-            searchResult.setDocumentTitle(document.getTitle());
 
             ArrayList<Integer> exceptIndex = new ArrayList<>();
             for (int i = 0; i < documentWords.size(); i++) {
-//                exceptIndex = 0;
                 String text = documentWords.get(i).getText();
                 Analysis analysis = documentWords.get(i).getAnalysis();
 
-                if (text != null && !text.isEmpty() && searchRequest.getText() != null && !searchRequest.getText().isEmpty() && text.contains(searchRequest.getText())) {
-                    //     text = "<b>" + text + "</b>";
-                    documentWords.get(i).setText(text);
+                if (text != null && !text.isEmpty() && searchRequest.getText() != null && !searchRequest.getText().isEmpty()
+                        && text.toLowerCase().contains(searchRequest.getText().toLowerCase())) {
                     exceptIndex.add(i);
 
                 }
 
 
-                if (analysis != null && !analysis.getLex().isEmpty() && searchRequest.getLex() != null && !searchRequest.getLex().isEmpty() && analysis.getLex().contains(searchRequest.getLex())) {
-                    //    text = "<b>" + text + "</b>";
-                    //   documentWords.get(i).setText(text);
+                if (analysis != null && !analysis.getLex().isEmpty() && searchRequest.getLex() != null
+                        && !searchRequest.getLex().isEmpty() && analysis.getLex().toLowerCase().contains(searchRequest.getLex().toLowerCase())) {
                     exceptIndex.add(i);
-
                 }
 
-                if (analysis != null && !analysis.getGr().isEmpty() && searchRequest.getGr() != null && !searchRequest.getGr().isEmpty() && analysis.getGr().contains(searchRequest.getGr())) {
-                    //    text = "<b>" + text + "</b>";
-                    //     documentWords.get(i).setText(text);
+                if (analysis != null && !analysis.getGr().isEmpty() && searchRequest.getGr() != null
+                        && !searchRequest.getGr().isEmpty() && analysis.getGr().toLowerCase().contains(searchRequest.getGr().toLowerCase())) {
                     exceptIndex.add(i);
                 }
             }
 
             List<DocumentWord> documentExcept;
-
+            if (exceptIndex.isEmpty())
+                exceptIndex.add(0);
             for (Integer index : exceptIndex) {
+                //todo
+                Integer offset = 0;
                 if (document.getWords().size() > index + exceptLength)
                     documentExcept = documentWords.subList(index, index + exceptLength);
                 else
                     documentExcept = documentWords.subList(index, document.getWords().size());
+                SearchResult searchResult = new SearchResult();
+                searchResult.setAuthorUsername(document.getAuthorUsername());
+                searchResult.setDocumentID(document.get_id());
+                searchResult.setDocumentTitle(document.getTitle());
+
                 searchResult.setDocumentExcerpt(documentExcept);
+                searchResult.setMarkedWordIndex(offset);
                 results.add(searchResult);
             }
         });
 
-
         return results;
     }
+
 
     @Override
     @GetMapping("/{id}")
