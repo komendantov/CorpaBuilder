@@ -19,6 +19,7 @@ public class CorpusDocumentUtils {
                 String word = textList.get(i);
                 if (word.contains(key)) {
                     textWithReplaces.put(i, word.replace(key, userReplaces.get(key)));
+                    break;
                 } else {
                     textWithReplaces.put(i, word);
                 }
