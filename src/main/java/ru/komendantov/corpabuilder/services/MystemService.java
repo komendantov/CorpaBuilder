@@ -41,7 +41,7 @@ public class MystemService {
         bw.write(text);
         bw.close();
         String result = analyseText(f);
-        f.delete();
+        f.deleteOnExit();
         return result;
     }
 }

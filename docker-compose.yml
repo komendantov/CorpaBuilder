@@ -1,0 +1,16 @@
+version: '2'
+services:
+  backend:
+    image: corpabuilder:latest
+    ports:
+      - "8080:8080"
+    links:
+      - mongodb
+    expose:
+      - 8080
+    network_mode: bridge
+  mongodb:
+    image: library/mongo:latest
+    expose:
+      - 27017
+    network_mode: bridge
