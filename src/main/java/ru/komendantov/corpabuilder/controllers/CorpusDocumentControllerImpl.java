@@ -112,10 +112,13 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
             // query.addCriteria(Criteria.where("words.analysis.lex").regex(searchRequest.getLex()));
             criteriaList.add(Criteria.where("words.analysis.lex").regex(searchRequest.getLex(), "i"));
         }
-
-        if (searchRequest.getTags() != null && !searchRequest.getTags().isEmpty()) {
+        if (searchRequest.getLex() != null && !searchRequest.getLex().isEmpty()) {
+            // query.addCriteria(Criteria.where("words.analysis.lex").regex(searchRequest.getLex()));
+            criteriaList.add(Criteria.where("words.analysis.lex").regex(searchRequest.getLex(), "i"));
+        }
+        if (searchRequest.getAuthorUsername() != null && !searchRequest.getAuthorUsername().isEmpty()) {
             //  query.addCriteria(Criteria.where("tags").in(searchRequest.getTags()));
-            criteriaList.add(Criteria.where("tags").in(searchRequest.getTags(), "i"));
+            criteriaList.add(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername(), "i"));
         }
 
         for (Criteria criteria : criteriaList
@@ -124,7 +127,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
         }
         List<CorpusDocument> requestResult;
 
-        if (criteriaList.isEmpty() || criteriaList.size()==0)
+        if (criteriaList.isEmpty())
             requestResult = mongoTemplate.findAll(CorpusDocument.class);
         else
             requestResult = mongoTemplate.find(query, CorpusDocument.class);
