@@ -106,7 +106,7 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
         }
         if (searchRequest.getAuthorUsername() != null && !searchRequest.getAuthorUsername().isEmpty()) {
             //      query.addCriteria(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername()));
-            criteriaList.add(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername(), "i"));
+            criteriaList.add(Criteria.where("authorUsername").is(searchRequest.getAuthorUsername()));
         }
         if (searchRequest.getLex() != null && !searchRequest.getLex().isEmpty()) {
             // query.addCriteria(Criteria.where("words.analysis.lex").regex(searchRequest.getLex()));
@@ -115,10 +115,6 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
         if (searchRequest.getLex() != null && !searchRequest.getLex().isEmpty()) {
             // query.addCriteria(Criteria.where("words.analysis.lex").regex(searchRequest.getLex()));
             criteriaList.add(Criteria.where("words.analysis.lex").regex(searchRequest.getLex(), "i"));
-        }
-        if (searchRequest.getAuthorUsername() != null && !searchRequest.getAuthorUsername().isEmpty()) {
-            //  query.addCriteria(Criteria.where("tags").in(searchRequest.getTags()));
-            criteriaList.add(Criteria.where("authorUsername").regex(searchRequest.getAuthorUsername(), "i"));
         }
 
         for (Criteria criteria : criteriaList
@@ -147,7 +143,6 @@ public class CorpusDocumentControllerImpl implements CorpusDocumentController {
                     exceptIndex.add(i);
 
                 }
-
 
                 if (analysis != null && !analysis.getLex().isEmpty() && searchRequest.getLex() != null
                         && !searchRequest.getLex().isEmpty() && analysis.getLex().toLowerCase().contains(searchRequest.getLex().toLowerCase())) {
